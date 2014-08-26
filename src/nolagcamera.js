@@ -104,6 +104,7 @@ camera.capture(function (err) {
     connections -= 1;
     camera.close();
     return console.error('couldn\'t initialize camera. got:', err);
+    process.exit(-1);
   }
 });
 camera.on('error.device', function (err) {
