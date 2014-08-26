@@ -33,7 +33,7 @@ CONFIG.defaults({
 
 var getLibPath = function (lib) {
   var result = lib;
-  if (nconf.get('USE_MOCK') === 'true') {
+  if (this.get('USE_MOCK') === 'true') {
     result += '-mock';
   }
   return result;
@@ -43,7 +43,7 @@ var getLibPath = function (lib) {
 CONFIG.set('OpenROVCameraPath',getLibPath('OpenROVCameraPath'));
 
 CONFIG.prototype.savePreferences = function savePreferences() {
-  nconf.save(function (err) {
+  this.save(function (err) {
     if (err) {
       console.error(err.message);
       return;
