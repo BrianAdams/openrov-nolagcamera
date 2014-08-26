@@ -13,7 +13,7 @@ var CONFIG = require('./config'),
   server = require('http').createServer(app),
   io = require('socket.io').listen(server),
   EventEmitter = require('events').EventEmitter,
-  Camera = require(CONFIG.NoLagCamera),
+  Camera = require(CONFIG.get('NoLagCamera')),
   logger = require('logger').create(CONFIG),
   path = require('path');
 
@@ -71,9 +71,9 @@ io.sockets.on('connection', function (socket) {
   socket.on('update_settings', function (value) {
     for (var property in value)
       if (value.hasOwnProperty(property))
-        CONFIG.preferences.set(property, value[property]);
+        CONFIG.set(property, value[property]);
 
-    CONFIG.savePreferences();
+    CONFIG.save();
     controller.updateSetting();
     setTimeout(function () {
       controller.requestSettings();
