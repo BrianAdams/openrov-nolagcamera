@@ -40,7 +40,7 @@ var getLibPath = function (lib) {
 };
 
 
-CONFIG.set('OpenROVCameraPath',getLibPath('OpenROVCameraPath'));
+CONFIG.set('OpenROVCameraPath',getLibPath(OpenROVCameraPath));
 
 module.exports = CONFIG;
 console.log('config', module.exports);
