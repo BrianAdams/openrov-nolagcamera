@@ -7,7 +7,13 @@
  * and then emits the content to the Node.js server in base64 (string) format.
  *
  */
-var spawn = require('child_process').spawn, util = require('util'), request = require('request'), EventEmitter = require('events').EventEmitter, fs = require('fs'), path = require('path'), CONFIG = require('./config'), logger = require('./logger').create(CONFIG), orutils = require('./orutils'), moment = require('moment');
+var spawn = require('child_process').spawn,
+ util = require('util'),
+ EventEmitter = require('events').EventEmitter,
+ fs = require('fs'),
+ path = require('path'),
+ CONFIG = require('./config'),
+ logger = require('./logger').create(CONFIG);
 var NoLagCamera = function (options) {
   var camera = new EventEmitter();
   var capture_process;
@@ -15,12 +21,12 @@ var NoLagCamera = function (options) {
   var cmd = 'mjpg_streamer';
   // rename to correspond with your C++ compilation
   var default_opts = {
-      device: CONFIG.video_device,
-      resolution: CONFIG.video_resolution,
-      framerate: CONFIG.video_frame_rate,
-      port: CONFIG.video_port
+      device: CONFIG.get('video_device'),
+      resolution: CONFIG.get('video_resolution'),
+      framerate: CONFIG.get('video_frame_rate'),
+      port: CONFIG.get('video_port');
     };
-  options = orutils.mixin(options, default_opts);
+  options = default_opts;
   var _capturing = false;
   camera.IsCapturing = function () {
     return _capturing;
@@ -39,13 +45,6 @@ var NoLagCamera = function (options) {
     _capturing = false;
     logger.log('sending SIGHUP to capture process');
     process.kill(capture_process.pid, 'SIGHUP');
-  };
-  camera.snapshot = function (callback) {
-    if (!_capturing)
-      return;
-    var filename = CONFIG.preferences.get('photoDirectory') + '/ROV' + moment().format('YYYYMMDDHHmmss') + '.jpg';
-    request('http://localhost:' + options.port + '/?action=snapshot').pipe(fs.createWriteStream(filename));
-    callback(filename);
   };
   // Actual camera capture starting mjpg-stremer
   camera.capture = function (callback) {

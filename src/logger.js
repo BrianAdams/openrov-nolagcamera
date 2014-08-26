@@ -1,11 +1,11 @@
 function Logger(config) {
   this.log = function (params) {
-    if (config.debug) {
+    if (config.get('debug')) {
       console.log(params);
     }
   };
   this.command = function (params) {
-    if (config.debug_commands) {
+    if (config.get('debug_commands')) {
       console.error('command', command);
     }
   };
