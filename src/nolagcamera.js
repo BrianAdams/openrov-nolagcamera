@@ -13,7 +13,7 @@ var CONFIG = require('./config'),
   server = require('http').createServer(app),
   io = require('socket.io').listen(server),
   EventEmitter = require('events').EventEmitter,
-  Camera = require(CONFIG.get('NoLagCamera')),
+  Camera = require(CONFIG.get('OpenROVCameraPath')),
   logger = require('logger').create(CONFIG),
   path = require('path');
 
