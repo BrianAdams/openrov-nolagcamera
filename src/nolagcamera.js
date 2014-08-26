@@ -31,8 +31,14 @@ app.configure(function () {
 // setup required directories
 process.env.NODE_ENV = true;
 var globalEventLoop = new EventEmitter();
-var DELAY = Math.round(1000 / CONFIG.video_frame_rate);
-var camera = new Camera({ delay: DELAY });
+var camera = new Camera(
+  {
+      device: CONFIG.get('video_device'),
+      resolution: CONFIG.get('video_resolution'),
+      framerate: CONFIG.get('video_frame_rate'),
+      port: CONFIG.get('video_port')
+  }
+);
 
 app.get('/config.js', function (req, res) {
   res.type('application/javascript');
@@ -59,7 +65,7 @@ io.sockets.on('connection', function (socket) {
   // opens socket with client
   if (camera.IsCapturing) {
     socket.emit('videoStarted');
-    console.log('Send videoStarted to client 2');
+    console.log('Send videoStarted to client');
   } else {
     console.log('Trying to restart mjpeg streamer');
     camera.capture();

@@ -12,28 +12,22 @@ var spawn = require('child_process').spawn,
  EventEmitter = require('events').EventEmitter,
  fs = require('fs'),
  path = require('path'),
- CONFIG = require('./config'),
- logger = require('./logger').create(CONFIG);
+ logger = require('./logger');
+
 var NoLagCamera = function (options) {
   var camera = new EventEmitter();
   var capture_process;
   // Open mjpg_streamer app as a child process
-  var cmd = 'mjpg_streamer';
+  var mjpegprocess_cmd = 'mjpg_streamer';
   // rename to correspond with your C++ compilation
-  var default_opts = {
-      device: CONFIG.get('video_device'),
-      resolution: CONFIG.get('video_resolution'),
-      framerate: CONFIG.get('video_frame_rate'),
-      port: CONFIG.get('video_port')
-    };
-  options = default_opts;
+
   var _capturing = false;
   camera.IsCapturing = function () {
     return _capturing;
   };
-  var args = [
+  var mjpegprocess_args = [
       '-i',
-      '/usr/local/lib/input_uvc.so -r ' + options.resolution + ' -f ' + options.framerate,
+      '/usr/local/lib/input_uvc.so -d ' + options.device + ' -r ' + options.resolution + ' -f ' + options.framerate,
       '-o',
       '/usr/local/lib/output_http.so -p ' + options.port
     ];
@@ -49,11 +43,7 @@ var NoLagCamera = function (options) {
   // Actual camera capture starting mjpg-stremer
   camera.capture = function (callback) {
     logger.log('initiating camera on', options.device);
-    logger.log('ensure beagle is at 100% cpu for this camera');
-    spawn('cpufreq-set', [
-      '-g',
-      'performance'
-    ]);
+
     // if camera working, should be at options.device (most likely /dev/video0 or similar)
     fs.exists(options.device, function (exists) {
       // no camera?!
@@ -64,13 +54,13 @@ var NoLagCamera = function (options) {
       _capturing = true;
       // then remember that we're capturing
       logger.log('spawning capture process...');
-      capture_process = spawn(cmd, args);
+      capture_process = spawn(mjpegprocess_cmd, mjpegprocess_args);
       camera.emit('started');
       capture_process.stdout.on('data', function (data) {
         logger.log('camera: ' + data);
       });
       capture_process.stderr.on('data', function (data) {
-        logger.log('camera: ' + data);  //	camera.emit('error.device',data);
+        camera.emit('error.device',data);
       });
       console.log('camera started');
       capture_process.on('exit', function (code) {
