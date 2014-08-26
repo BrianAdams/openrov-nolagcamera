@@ -42,15 +42,5 @@ var getLibPath = function (lib) {
 
 CONFIG.set('OpenROVCameraPath',getLibPath('OpenROVCameraPath'));
 
-CONFIG.prototype.savePreferences = function savePreferences() {
-  this.save(function (err) {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-    console.log('Configuration saved successfully.');
-  });
-}
-
 module.exports = CONFIG;
 console.log('config', module.exports);
