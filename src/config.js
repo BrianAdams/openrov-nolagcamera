@@ -30,6 +30,16 @@ CONFIG.defaults({
   'USE_MOCK' : false
 });
 
+
+var getLibPath = function (lib) {
+  var result = lib;
+  if (nconf.get('USE_MOCK') === 'true') {
+    result += '-mock';
+  }
+  return result;
+};
+
+
 CONFIG.set('OpenROVCameraPath',getLibPath('OpenROVCameraPath'));
 
 CONFIG.prototype.savePreferences = function savePreferences() {
@@ -41,14 +51,6 @@ CONFIG.prototype.savePreferences = function savePreferences() {
     console.log('Configuration saved successfully.');
   });
 }
-
-var getLibPath = function (lib) {
-  var result = lib;
-  if (nconf.get('USE_MOCK') === 'true') {
-    result += '-mock';
-  }
-  return result;
-};
 
 module.exports = CONFIG;
 console.log('config', module.exports);
