@@ -6,7 +6,7 @@
  * milliseconds.
  *
  */
-var CONFIG = require('config'),
+var CONFIG = require('./config'),
   fs = require('fs'),
   express = require('express'),
   app = express(),
