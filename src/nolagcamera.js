@@ -103,7 +103,7 @@ camera.capture(function (err) {
   if (err) {
     connections -= 1;
     camera.close();
-    return console.error('couldn\'t initialize camera. got:', err);
+    console.error('couldn\'t initialize camera. got:', err);
     process.exit(-1);
   }
 });
