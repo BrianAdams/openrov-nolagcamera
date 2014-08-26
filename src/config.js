@@ -33,7 +33,7 @@ CONFIG.defaults({
 
 var getLibPath = function (lib) {
   var result = lib;
-  if (this.get('USE_MOCK') === 'true') {
+  if (CONFIG.get('USE_MOCK') === 'true') {
     result += '-mock';
   }
   return result;
