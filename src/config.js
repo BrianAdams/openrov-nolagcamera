@@ -8,7 +8,7 @@ var CONFIG = require('nconf');
 
 //Add your Mock objects here using this same naming convention of library-mock for the mock version.
 //be sure to add it to the expoft at the bottom of this file as well.
-var OpenROVCameraPath = 'nolagcamera-contoller';
+var OpenROVCameraPath = 'nolagcamera-controller';
 
 // Will essentially rewrite the file when a change to the defaults are made if there is a parsing error.
 try {
