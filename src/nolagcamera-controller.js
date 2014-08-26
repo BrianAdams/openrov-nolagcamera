@@ -24,7 +24,7 @@ var NoLagCamera = function (options) {
       device: CONFIG.get('video_device'),
       resolution: CONFIG.get('video_resolution'),
       framerate: CONFIG.get('video_frame_rate'),
-      port: CONFIG.get('video_port');
+      port: CONFIG.get('video_port')
     };
   options = default_opts;
   var _capturing = false;
