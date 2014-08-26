@@ -1,0 +1,24 @@
+{
+  "name": "OpenROV-NoLagCamera",
+  "author": "OpenROV team (http://www.openrov.com)",
+  "description": "A service for transmitting low latency video from a local camera",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/OpenROV/openrov-nolagcamera.git"
+  },
+  "dependencies": {
+    "express": "= 3.4.8",
+    "socket.io": "~0.9.17",
+    "nconf" : "",
+    "forever-monitor" : "",
+	  "optimist" : ""
+  },
+  "bundleDependencies": [
+    "express",
+    "socket.io"
+  ],
+  "engines": {
+    "node": ">= 0.10.15"
+  }
+}
