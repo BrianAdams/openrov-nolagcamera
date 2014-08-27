@@ -23,11 +23,12 @@ CONFIG.env(); //Also look for overrides in environment settings
 // Do not change these values in this file for an individual ROV, use the ./etc/rovconfig.json instead
 
 CONFIG.defaults({
-  'video_frame_rate': 10,
-  'video_resolution': 'SXGA',
-  'video_device': '/dev/video0',
-  'video_port': 8090,
-  'USE_MOCK' : false
+  'mjpeg.video_frame_rate': 10,
+  'mjpeg.video_resolution': 'SXGA',
+  'mjpeg.video_device': '/dev/video0',
+  'mjpeg.video_port': 8090,
+  'USE_MOCK' : false,
+  'service.port': 8091
 });
 
 

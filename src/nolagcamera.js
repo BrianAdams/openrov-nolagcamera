@@ -14,7 +14,6 @@ var CONFIG = require('./config'),
   io = require('socket.io').listen(server),
   EventEmitter = require('events').EventEmitter,
   Camera = require(CONFIG.get('OpenROVCameraPath')),
-  logger = require('./logger').create(CONFIG),
   path = require('path');
 
 app.configure(function () {
@@ -28,21 +27,21 @@ app.configure(function () {
   app.use(express.logger('dev'));
   app.use(app.router);
 });
-// setup required directories
+
 process.env.NODE_ENV = true;
 var globalEventLoop = new EventEmitter();
 var camera = new Camera(
   {
-      device: CONFIG.get('video_device'),
-      resolution: CONFIG.get('video_resolution'),
-      framerate: CONFIG.get('video_frame_rate'),
-      port: CONFIG.get('video_port')
+      device: CONFIG.get('mjpeg.video_device'),
+      resolution: CONFIG.get('mjpeg.video_resolution'),
+      framerate: CONFIG.get('mjpeg.video_frame_rate'),
+      port: CONFIG.get('mjpeg.video_port')
   }
 );
 
 app.get('/config.js', function (req, res) {
   res.type('application/javascript');
-  res.send('var CONFIG = ' + JSON.stringify(CONFIG));
+  res.send('var CONFIG = ' + JSON.stringify(CONFIG.get()));
 });
 app.get('/', function (req, res) {
   res.render('index', {
@@ -55,48 +54,19 @@ app.get('/', function (req, res) {
 io.configure(function () {
   io.set('log level', 1);
 });
+
 var connections = 0;
 // SOCKET connection ==============================
 io.sockets.on('connection', function (socket) {
   connections += 1;
-  if (connections == 1)
-    controller.start();
-  socket.send('initialize');
-  // opens socket with client
-  if (camera.IsCapturing) {
-    socket.emit('videoStarted');
-    console.log('Send videoStarted to client');
-  } else {
-    console.log('Trying to restart mjpeg streamer');
-    camera.capture();
-    socket.emit('videoStarted');
-  }
+
   socket.on('ping', function (id) {
     socket.emit('pong', id);
   });
-  socket.on('update_settings', function (value) {
-    for (var property in value)
-      if (value.hasOwnProperty(property))
-        CONFIG.set(property, value[property]);
 
-    CONFIG.save();
-    controller.updateSetting();
-    setTimeout(function () {
-      controller.requestSettings();
-    }, 1000);
-  });
   socket.on('disconnect', function () {
     connections -= 1;
     console.log('disconnect detected');
-    if (connections === 0)
-      controller.stop();
-  });
-  globalEventLoop.on('videoStarted', function () {
-    socket.emit('videoStarted');
-    console.log('sent videoStarted to client');
-  });
-  globalEventLoop.on('videoStopped', function () {
-    socket.emit('videoStopped');
   });
 
 });
@@ -105,6 +75,7 @@ camera.on('started', function () {
   console.log('emitted \'videoStarted\'');
   globalEventLoop.emit('videoStarted');
 });
+
 camera.capture(function (err) {
   if (err) {
     connections -= 1;
@@ -113,10 +84,12 @@ camera.capture(function (err) {
     process.exit(-1);
   }
 });
+
 camera.on('error.device', function (err) {
   console.log('camera emitted an error:', err);
   globalEventLoop.emit('videoStopped');
 });
+
 if (process.platform === 'linux') {
   process.on('SIGTERM', function () {
     console.error('got SIGTERM, shutting down...');
@@ -131,6 +104,6 @@ if (process.platform === 'linux') {
 }
 
 // Start the web server
-server.listen(app.get('port'), function () {
-  console.log('Started listening on port: ' + app.get('port'));
+server.listen(app.get('service.port'), function () {
+  console.log('Started listening on port: ' + app.get('service.port'));
 });
