@@ -88,6 +88,7 @@ camera.capture(function (err) {
 camera.on('error.device', function (err) {
   console.log('camera emitted an error:', err);
   globalEventLoop.emit('videoStopped');
+  process.exit(err);
 });
 
 if (process.platform === 'linux') {
