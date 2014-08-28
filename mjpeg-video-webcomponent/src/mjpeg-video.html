@@ -1,6 +1,7 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 
 <polymer-element name="mjpeg-video" attributes="src novideoImageURL maxframespersecond"  noscript>
+<script src="fullscreen-api-polyfill.js"></script>
   <template>
     <div id="videocontainer" style="{{styletodo}}" class="{{classtodo}}">
       <img hidden="true" id="video1" src="" on-load="{{imagefailed}}"/>
@@ -46,12 +47,12 @@
             return refcallback(err);
           }
           if (!self.isHidden) self.isHidden=true;
-        }, 64);  //only need to redraw at the framerate of source video
+        }, 1000/30);  //only need to redraw at the framerate of source video
       },
       imagefailed: function(e){
         var elm = e.srcElement;
         if(!elm.complete || typeof elm.naturalWidth == "undefined" || elm.naturalWidth==0) {
-         alert('broken image');
+         console.log('broken image detected in img element');
         };
       },
       restart: function(){
@@ -67,6 +68,10 @@
         clearInterval(this.videopainttimerId);
         this.rawmjpegURL = "";
         this.isHidden=false;
+      },
+      fullscreen: function(){
+        var elm = this.$['video-canvas'];
+        elm.requestFullscreen(); // standard
       },
       ready: function() {
         var self=this
@@ -93,7 +98,7 @@
             console.log('video off of buffer 1');
             self.buffer = true;
           }
-        },5000);
+        },30000);
         this.play(function(err){
           self.restart();
         });
