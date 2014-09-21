@@ -29,6 +29,6 @@ deploy:
   endpoint: bucket-name.s3-website-us-west-2.amazonaws.com
   local-dir: build
   upload-dir: nolagcamera
-  acl: !ruby/string:HighLine::String plublic_read
+  acl: !ruby/string:HighLine::String public_read
   on:
     repo: BrianAdams/openrov-nolagcamera

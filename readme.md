@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/BrianAdams/openrov-nolagcamera.png?branch=master)](http://travis-ci.org/BrianAdams/openrov-nolagcamera)
+
 OpenROV No Lag Camera Project
 =========
 
