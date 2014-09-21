@@ -11,7 +11,7 @@ after_success:
 - echo version_number $VERSION_NUMBER
 - echo real_get_branch $REAL_GIT_BRANCH
 - rm -rf OpenROV/build-*
-- 'fpm -f -m info@openrov.com -s dir -t deb -a armhf -n openrov-nolagcamera -d http://54.187.8.25:8080/job/OpenROV-DEBIAN-023-packages-mjpegstreamer/lastSuccessfulBuild/artifact/work/packages/openrov-mjpeg-streamer_2.0-1_armhf.deb
+- 'fpm -f -m info@openrov.com -s dir -t deb -a armhf -n openrov-nolagcamera -d openrov-mjpeg-streamer
   -v $VERSION_NUMBER-$REAL_GIT_BRANCH --before-install=linux/openrov-nolagcamera-beforeinstall.sh
   --after-install=linux/openrov-nolagcamera-afterinstall.sh --before-remove=linux/openrov-nolagcamera-beforeremove.sh
   --description ''OpenROV NoLagCamera'' .=/opt/openrov/nolagcamera '
